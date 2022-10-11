@@ -1,5 +1,4 @@
 from datetime import time
-
 import requests
 from bs4 import BeautifulSoup
 import pandas as pd
@@ -7,6 +6,7 @@ import requests
 import time
 
 Category_started = 0
+# Headers for the CSV file
 columnslist = ["Source", "Firm", "Address Line 1", "Telephone Number", "URL"]
 alldata = []
 empty = pd.DataFrame(alldata, columns=columnslist)
@@ -92,6 +92,7 @@ def link_fetch():
 
 
 def scrape(soup):
+
     sections_containing_link = soup.find_all("div", "show-img")
 
     # print(sections_containing_link)
@@ -104,27 +105,31 @@ def scrape(soup):
         result_2 = requests.get(links_href).text
         # print(urls)
         soup_2 = BeautifulSoup(result_2, 'lxml')
+        # Source
+        Source = "https://searchfrog.com.au/?select=&lp_s_loc=17&lp_s_tag=&lp_s_cat=&s=home&post_type=listing"
+        # Firm
         try:
             firm = soup_2.find_all("h1")[0]
         except:
             firm = "Null"
-        # print(firm)
-        results_completed += 1
-        Source = "https://searchfrog.com.au/?select=&lp_s_loc=17&lp_s_tag=&lp_s_cat=&s=home&post_type=listing"
+        # Address
         try:
             address = soup_2.select_one("ul > li.lp-details-address > a > span:nth-child(2)").text.strip()
         except:
             address = "Null"
+        # Telephone Number
         try:
             telephone = soup_2.select_one("ul > li.lp-listing-phone > a").text.strip()
         except:
             telephone = "Null"
-
+        # URL
         try:
             URL = soup_2.select_one("ul > li.lp-user-web > a > span:nth-child(2)").text.strip()
         except:
             URL = "Null"
+            
         list_of_data.append((Source, firm, address, telephone, URL))
+        results_completed += 1
     return list_of_data
 
 souplist = link_fetch()
