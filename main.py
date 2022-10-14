@@ -13,8 +13,6 @@ empty = pd.DataFrame(alldata, columns=columnslist)
 empty.to_csv('searchFrogCom.csv', encoding='utf-8-sig', index=False)
 
 
-
-
 def html_clean(in_tuple):
     # cleanup html to text and remove unneeded characters
     list = []
@@ -127,7 +125,7 @@ def scrape(soup):
             URL = soup_2.select_one("ul > li.lp-user-web > a > span:nth-child(2)").text.strip()
         except:
             URL = "Null"
-            
+
         list_of_data.append((Source, firm, address, telephone, URL))
         results_completed += 1
     return list_of_data
